@@ -144,8 +144,8 @@ static void place(void *bp,size_t asize){
 		PUT(HDRP(bp),PACK(asize,1));
 		PUT(FTRP(bp),PACK(asize,1));
 		
-		PUT(HDRP(NEXT_BLKP(bp)),PACK(asize,0));
-		PUT(FTRP(NEXT_BLKP(bp)),PACK(asize,0));
+		PUT(HDRP(NEXT_BLKP(bp)),PACK(totsize-asize,0));
+		PUT(FTRP(NEXT_BLKP(bp)),PACK(totsize-asize,0));
 	}
 }
 
@@ -163,34 +163,31 @@ int main()
 {
 	int *p;
 	int n;
-	int a[100];
-	a[0]=9;a[7]=9;
-	a[8]=17;a[23]=17;
-	p=(int *)a+1;
-	printf("%x\n%x\n****\n",p,HDRP(NEXT_BLKP(p)));
+	char s[10];
 	mem_init();
 	if(mm_init()<0){
 		printf("init error\n");
 		exit(0);
 	}
-	while(scanf("%d",&n)==1){
-		p=(int *)mm_malloc(n);
-		//mm_free(p);
-		printmemlist();
+	while(scanf("%s",s)==1){
+		if('m'==s[0]){
+			printf("input memory size you need \n");
+			scanf("%d",&n);
+			p=(int *)mm_malloc(n);
+			printmemlist();
+		}
+		else if('f'==s[0]){
+			printf("input which memory block you want free\n");
+			scanf("%x",&p);
+			mm_free(p);
+			printmemlist();
+		}
+		else if('p'==s[0]){
+			printmemlist();
+		}
+		else if('e'==s[0])break;
 	}
 
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
